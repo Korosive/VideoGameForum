@@ -22,7 +22,7 @@ public class ArticleService {
 
     private final Logger log = LoggerFactory.getLogger(this.getClass());
 
-    public HashMap<String, Object> getArticleInfoList() {
+    public HashMap<String, Object> getEnabledArticles() {
         String sql = "SELECT article_id, username, title, date_created FROM articles WHERE enabled = true ORDER BY date_created DESC;";
         HashMap<String, Object> response = new HashMap<>();
 
@@ -60,6 +60,6 @@ public class ArticleService {
         return response;
     }
 
-
+    public
 
 }
