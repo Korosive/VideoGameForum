@@ -14,19 +14,15 @@ public class Article {
     @Column(name = "user_id")
     private UUID user_id;
 
-    @Column(name = "paragraph_id")
-    private UUID paragraph_id;
-
     @Column(name = "title")
     private String title;
 
     @Column(name = "date_created")
     private Date date_created;
 
-    public Article(UUID article_id, UUID user_id, UUID paragraph_id, String title, Date date_created) {
+    public Article(UUID article_id, UUID user_id, String title, Date date_created) {
         this.article_id = article_id;
         this.user_id = user_id;
-        this.paragraph_id = paragraph_id;
         this.title = title;
         this.date_created = date_created;
     }
@@ -37,10 +33,6 @@ public class Article {
 
     public UUID getUser_id() {
         return user_id;
-    }
-
-    public UUID getParagraph_id() {
-        return paragraph_id;
     }
 
     public String getTitle() {
