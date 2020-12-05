@@ -20,11 +20,15 @@ public class Article {
     @Column(name = "date_created")
     private Date date_created;
 
-    public Article(UUID article_id, String username, String title, Date date_created) {
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public Article(UUID article_id, String username, String title, Date date_created, boolean enabled) {
         this.article_id = article_id;
         this.username = username;
         this.title = title;
         this.date_created = date_created;
+        this.enabled = enabled;
     }
 
     public UUID getArticle_id() {
@@ -41,5 +45,9 @@ public class Article {
 
     public Date getDate_created() {
         return date_created;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }
