@@ -54,12 +54,26 @@ public class ArticleService {
             log.info("Failed to disable article {} on {}.", article_id, new Date());
             response.put("success", false);
             response.put("message", "Failed to disable article.");
-            log.info("Failed to disable article {} on {}.", article_id, new Date());
         }
 
         return response;
     }
 
-    public
+    public HashMap<String, Object> enableArticle(UUID article_id) {
+        String sql = "UPDATE articles SET enabled = true WHERE article_id = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            jdbcTemplate.update(sql, article_id);
+            response.put("success", true);
+            response.put("message", "Successfully enabled article.");
+            log.info("Successfully enabled article {} on {}.", article_id, new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            log.info("Failed to enable article {} on {}.", article_id, new Date());
+            response.put("success", false);
+            response.put("message", "Failed to enable article.");
+        }
+    }
 
 }
