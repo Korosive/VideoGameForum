@@ -74,6 +74,8 @@ public class ArticleService {
             response.put("success", false);
             response.put("message", "Failed to enable article.");
         }
+
+        return response;
     }
 
 }
