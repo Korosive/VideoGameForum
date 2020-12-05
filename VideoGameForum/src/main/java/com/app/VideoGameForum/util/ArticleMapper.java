@@ -12,7 +12,7 @@ public class ArticleMapper implements RowMapper<Article> {
     public Article mapRow(ResultSet resultSet, int i) throws SQLException {
         return new Article(
                 resultSet.getObject("article_id", UUID.class),
-                resultSet.getObject("user_id", UUID.class),
+                resultSet.getString("username"),
                 resultSet.getString("title"),
                 resultSet.getDate("date_created")
         );

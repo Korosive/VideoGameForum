@@ -11,8 +11,8 @@ public class Article {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID article_id;
 
-    @Column(name = "user_id")
-    private UUID user_id;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "title")
     private String title;
@@ -20,9 +20,9 @@ public class Article {
     @Column(name = "date_created")
     private Date date_created;
 
-    public Article(UUID article_id, UUID user_id, String title, Date date_created) {
+    public Article(UUID article_id, String username, String title, Date date_created) {
         this.article_id = article_id;
-        this.user_id = user_id;
+        this.username = username;
         this.title = title;
         this.date_created = date_created;
     }
@@ -31,8 +31,8 @@ public class Article {
         return article_id;
     }
 
-    public UUID getUser_id() {
-        return user_id;
+    public String getUsername() {
+        return username;
     }
 
     public String getTitle() {
