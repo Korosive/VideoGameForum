@@ -47,14 +47,14 @@ public class ArticleService {
         try {
             jdbcTemplate.update(sql, article_id);
             response.put("success", true);
-            response.put("message", "Successfully deleted article.");
-            log.info("Successfully deleted article {} on {}.", article_id, new Date());
+            response.put("message", "Successfully disabled article.");
+            log.info("Successfully disabled article {} on {}.", article_id, new Date());
         } catch (DataAccessException exception) {
             exception.printStackTrace();
-            log.info("Failed to delete article {} on {}.", article_id, new Date());
+            log.info("Failed to disable article {} on {}.", article_id, new Date());
             response.put("success", false);
-            response.put("message", "Failed to delete article.");
-            log.info("Failed to delete article {} on {}.", article_id, new Date());
+            response.put("message", "Failed to disable article.");
+            log.info("Failed to disable article {} on {}.", article_id, new Date());
         }
 
         return response;
