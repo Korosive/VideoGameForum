@@ -40,6 +40,24 @@ public class ArticleService {
         return response;
     }
 
+    public HashMap<String, Object> getAllArticles() {
+        String sql = "SELECT article_id, username, title, date_created FROMm articles ORDER BY date_Created DESC;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            List<Article> listArticles = jdbcTemplate.query(sql, new ArticleMapper());
+            response.put("articles", listArticles);
+            log.info("Retrieved a list of articles on ({}).", new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            log.info("Failed to retrieve list of articles on ({}).", new Date());
+            response.put("status", "Error");
+            response.put("message", "Failed to retrieve list of articles.");
+        }
+
+        return response;
+    }
+
     public HashMap<String, Object> disableArticle(UUID article_id) {
         String sql = "UPDATE articles SET enabled = false WHERE article_id = ?;";
         HashMap<String, Object> response = new HashMap<>();
