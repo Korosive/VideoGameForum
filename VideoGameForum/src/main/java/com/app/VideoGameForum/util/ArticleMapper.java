@@ -14,6 +14,7 @@ public class ArticleMapper implements RowMapper<Article> {
                 resultSet.getObject("article_id", UUID.class),
                 resultSet.getString("username"),
                 resultSet.getString("title"),
+                resultSet.getString("content"),
                 resultSet.getDate("date_created"),
                 resultSet.getBoolean("enabled")
         );

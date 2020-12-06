@@ -17,16 +17,20 @@ public class Article {
     @Column(name = "title")
     private String title;
 
+    @Column(name = "content")
+    private String content;
+
     @Column(name = "date_created")
     private Date date_created;
 
     @Column(name = "enabled")
     private boolean enabled;
 
-    public Article(UUID article_id, String username, String title, Date date_created, boolean enabled) {
+    public Article(UUID article_id, String username, String title, String content, Date date_created, boolean enabled) {
         this.article_id = article_id;
         this.username = username;
         this.title = title;
+        this.content = content;
         this.date_created = date_created;
         this.enabled = enabled;
     }
@@ -41,6 +45,10 @@ public class Article {
 
     public String getTitle() {
         return title;
+    }
+
+    public String getContent() {
+        return content;
     }
 
     public Date getDate_created() {
