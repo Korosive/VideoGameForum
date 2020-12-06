@@ -11,8 +11,8 @@ public class Post {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private UUID post_id;
 
-    @Column(name = "user_id")
-    private UUID user_id;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "title")
     private String title;
@@ -23,20 +23,24 @@ public class Post {
     @Column(name = "date_created")
     private Date date_created;
 
-    public Post(UUID post_id, UUID user_id, String title, String description, Date date_created) {
+    @Column(name = "last_updated")
+    private Date last_updated;
+
+    public Post(UUID post_id, String username, String title, String description, Date date_created, Date last_updated) {
         this.post_id = post_id;
-        this.user_id = user_id;
+        this.username = username;
         this.title = title;
         this.description = description;
         this.date_created = date_created;
+        this.last_updated = last_updated;
     }
 
     public UUID getPost_id() {
         return post_id;
     }
 
-    public UUID getUser_id() {
-        return user_id;
+    public String getUsername() {
+        return username;
     }
 
     public String getTitle() {
@@ -49,5 +53,9 @@ public class Post {
 
     public Date getDate_created() {
         return date_created;
+    }
+
+    public Date getLast_updated() {
+        return last_updated;
     }
 }
