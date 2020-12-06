@@ -195,4 +195,23 @@ public class PostService {
 
         return response;
     }
+
+    public HashMap<String, Object> getUserPosts(String username) {
+        String sql = "SELECT * FROM posts WHERE username = ?";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            List<Post> listPosts = jdbcTemplate.query(sql, new Object[]{username}, new PostMapper());
+            response.put("success", true);
+            response.put("posts", listPosts);
+            log.info("Successfully retrieved a user's list of posts at {}.", new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to retrieve posts.");
+            log.info("Failed to retrieve user's posts at {}.", new Date());
+        }
+
+        return response;
+    }
 }

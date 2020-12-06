@@ -1,8 +1,6 @@
 package com.app.VideoGameForum.service;
 
-import com.app.VideoGameForum.model.Article;
 import com.app.VideoGameForum.model.Comment;
-import com.app.VideoGameForum.util.ArticleMapper;
 import com.app.VideoGameForum.util.CommentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -13,6 +11,7 @@ import org.springframework.stereotype.Service;
 
 import java.util.Date;
 import java.util.HashMap;
+import java.util.List;
 import java.util.UUID;
 
 @Service
@@ -110,5 +109,24 @@ public class CommentService {
         }
 
         return enabled;
+    }
+
+    public HashMap<String, Object> getUserComments(String username) {
+        String sql = "SELECT * FROM comments WHERE username = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            List<Comment> listComments = jdbcTemplate.query(sql, new Object[]{username}, new CommentMapper());
+            response.put("success", true);
+            response.put("comments", listComments);
+            log.info("Successfully retrieved a list of users comments at {}.", new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to retrieve user's comments.");
+            log.info("Failed to retrieve a list of users comments at {}.", new Date());
+        }
+
+        return response;
     }
 }
