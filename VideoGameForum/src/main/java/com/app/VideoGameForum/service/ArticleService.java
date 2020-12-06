@@ -9,6 +9,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.print.attribute.standard.JobKOctets;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -138,5 +139,51 @@ public class ArticleService {
         }
 
         return response;
+    }
+
+    public HashMap<String, Object> createArticle(Article new_article) {
+        String sql = "INSERT INTO articles (article_id, username, title, content, date_created, last_updated, enabled) VALUES (?, ?, ?, ?, ?, ?, ?);";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID article_id = UUID.randomUUID();
+        String username = new_article.getUsername();
+        String title = new_article.getTitle();
+        String content = new_article.getContent();
+        Date date_created = new Date();
+        Date last_updated = new Date();
+
+        try {
+            jdbcTemplate.update(sql, article_id, username, title, content, date_created, last_updated, true);
+            response.put("success", true);
+            response.put("message", "Successfully added new article: " + title + ".");
+            log.info("Created article: {} at {}.", title, new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to added new article.");
+            log.info("Failed to create article: {} at {}.", title, new Date());
+        }
+
+        return response;
+    }
+
+    public HashMap<String, Object> updateArticle(Article updated_article) {
+        String sql = "UPDATE articles SET title = ?, content = ?, last_updated = ? WHERE article_id = ?";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID article_id = updated_article.getArticle_id();
+        String title = updated_article.getTitle();
+        String content = updated_article.getContent();
+        Date last_updated = new Date();
+
+        try {
+            jdbcTemplate.update(sql, title, content, last_updated, article_id);
+            response.put("success", true);
+            response.put("message", "Successfully updated article.");
+            log.info("Updated article {} at {}.", article_id, new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to update article.");
+            log.info("Failed to update article {} at {}.", article_id, new Date());
+        }
     }
 }

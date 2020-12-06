@@ -16,6 +16,7 @@ public class ArticleMapper implements RowMapper<Article> {
                 resultSet.getString("title"),
                 resultSet.getString("content"),
                 resultSet.getDate("date_created"),
+                resultSet.getDate("last_updated"),
                 resultSet.getBoolean("enabled")
         );
     }

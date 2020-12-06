@@ -23,15 +23,19 @@ public class Article {
     @Column(name = "date_created")
     private Date date_created;
 
+    @Column(name = "last_updated")
+    private Date last_updated;
+
     @Column(name = "enabled")
     private boolean enabled;
 
-    public Article(UUID article_id, String username, String title, String content, Date date_created, boolean enabled) {
+    public Article(UUID article_id, String username, String title, String content, Date date_created, Date last_updated, boolean enabled) {
         this.article_id = article_id;
         this.username = username;
         this.title = title;
         this.content = content;
         this.date_created = date_created;
+        this.last_updated = last_updated;
         this.enabled = enabled;
     }
 
@@ -53,6 +57,10 @@ public class Article {
 
     public Date getDate_created() {
         return date_created;
+    }
+
+    public Date getLast_updated() {
+        return last_updated;
     }
 
     public boolean isEnabled() {
