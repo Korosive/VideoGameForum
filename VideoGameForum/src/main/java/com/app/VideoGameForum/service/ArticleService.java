@@ -62,18 +62,24 @@ public class ArticleService {
         String sql = "UPDATE articles SET enabled = false WHERE article_id = ?;";
         HashMap<String, Object> response = new HashMap<>();
 
-        try {
-            jdbcTemplate.update(sql, article_id);
-            response.put("success", true);
-            response.put("message", "Successfully disabled article.");
-            log.info("Successfully disabled article {} on {}.", article_id, new Date());
-        } catch (DataAccessException exception) {
-            exception.printStackTrace();
-            log.info("Failed to disable article {} on {}.", article_id, new Date());
+        if (checkArticleEnabled(article_id)) {
+            try {
+                jdbcTemplate.update(sql, article_id);
+                response.put("success", true);
+                response.put("message", "Successfully disabled article.");
+                log.info("Successfully disabled article {} on {}.", article_id, new Date());
+            } catch (DataAccessException exception) {
+                exception.printStackTrace();
+                log.info("Failed to disable article {} on {}.", article_id, new Date());
+                response.put("success", false);
+                response.put("message", "Failed to disable article.");
+            }
+        } else {
             response.put("success", false);
-            response.put("message", "Failed to disable article.");
+            response.put("message", "Article is already disabled.");
+            log.info("Article already disabled ({}).", new Date());
         }
-
+        
         return response;
     }
 
@@ -81,19 +87,40 @@ public class ArticleService {
         String sql = "UPDATE articles SET enabled = true WHERE article_id = ?;";
         HashMap<String, Object> response = new HashMap<>();
 
-        try {
-            jdbcTemplate.update(sql, article_id);
-            response.put("success", true);
-            response.put("message", "Successfully enabled article.");
-            log.info("Successfully enabled article {} on {}.", article_id, new Date());
-        } catch (DataAccessException exception) {
-            exception.printStackTrace();
-            log.info("Failed to enable article {} on {}.", article_id, new Date());
+        if (checkArticleEnabled(article_id)) {
             response.put("success", false);
-            response.put("message", "Failed to enable article.");
+            response.put("message", "Article is already enabled.");
+            log.info("Article already enabled ({}).", new Date());
+        } else {
+            try {
+                jdbcTemplate.update(sql, article_id);
+                response.put("success", true);
+                response.put("message", "Successfully enabled article.");
+                log.info("Successfully enabled article {} on {}.", article_id, new Date());
+            } catch (DataAccessException exception) {
+                exception.printStackTrace();
+                log.info("Failed to enable article {} on {}.", article_id, new Date());
+                response.put("success", false);
+                response.put("message", "Failed to enable article.");
+            }
         }
 
         return response;
+    }
+
+    private boolean checkArticleEnabled(UUID article_id) {
+        String sql = "SELECT * FROM articles WHERE article_id = ?;";
+        boolean enabled;
+
+        try {
+            Article article = jdbcTemplate.queryForObject(sql, new Object[]{article_id}, new ArticleMapper());
+            enabled = article.isEnabled();
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            enabled = false;
+        }
+
+        return enabled;
     }
 
 }
