@@ -1,6 +1,9 @@
 package com.app.VideoGameForum.service;
 
+import com.app.VideoGameForum.model.Article;
 import com.app.VideoGameForum.model.Comment;
+import com.app.VideoGameForum.util.ArticleMapper;
+import com.app.VideoGameForum.util.CommentMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -42,5 +45,70 @@ public class CommentService {
         }
 
         return response;
+    }
+
+    public HashMap<String, Object> disableComment(UUID comment_id) {
+        String sql = "UPDATE comments SET enabled = false WHERE comment_id = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        if (checkCommentEnabled(comment_id)) {
+            try {
+                jdbcTemplate.update(sql, comment_id);
+                response.put("success", true);
+                response.put("message", "Successfully disabled comment.");
+                log.info("Successfully disabled comment {} on {}.", comment_id, new Date());
+            } catch (DataAccessException exception) {
+                exception.printStackTrace();
+                log.info("Failed to disable comment {} on {}.", comment_id, new Date());
+                response.put("success", false);
+                response.put("message", "Failed to disable comment.");
+            }
+        } else {
+            response.put("success", false);
+            response.put("message", "Comment is already disabled.");
+            log.info("Comment already disabled ({}).", new Date());
+        }
+
+        return response;
+    }
+
+    public HashMap<String, Object> enableComment(UUID comment_id) {
+        String sql = "UPDATE comments SET enabled = true WHERE comment_id = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        if (checkCommentEnabled(comment_id)) {
+            response.put("success", false);
+            response.put("message", "Comment is already enabled.");
+            log.info("Comment already enabled ({}).", new Date());
+        } else {
+            try {
+                jdbcTemplate.update(sql, comment_id);
+                response.put("success", true);
+                response.put("message", "Successfully enabled comment.");
+                log.info("Successfully enabled comment {} on {}.", comment_id, new Date());
+            } catch (DataAccessException exception) {
+                exception.printStackTrace();
+                log.info("Failed to enable comment {} on {}.", comment_id, new Date());
+                response.put("success", false);
+                response.put("message", "Failed to enable comment.");
+            }
+        }
+
+        return response;
+    }
+
+    private boolean checkCommentEnabled(UUID comment_id) {
+        String sql = "SELECT * FROM comments WHERE comment_id = ?;";
+        boolean enabled;
+
+        try {
+            Comment comment = jdbcTemplate.queryForObject(sql, new Object[]{comment_id}, new CommentMapper());
+            enabled = comment.isEnabled();
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            enabled = false;
+        }
+
+        return enabled;
     }
 }
