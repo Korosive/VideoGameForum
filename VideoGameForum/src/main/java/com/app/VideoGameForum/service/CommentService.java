@@ -129,4 +129,25 @@ public class CommentService {
 
         return response;
     }
+
+    public HashMap<String, Object> updateComment(Comment update_comment) {
+        String sql = "UPDATE articles SET comment = ?, last_updated = ? WHERE comment_id = ?";
+        HashMap<String, Object> response = new HashMap<>();
+        String comment = update_comment.getComment();
+        UUID comment_id = update_comment.getComment_id();
+
+        try {
+            jdbcTemplate.update(sql, comment, new Date(), comment_id);
+            response.put("success", true);
+            response.put("message", "Successfully updated comment.");
+            log.info("Successfully updated comment {} at {}.", comment_id, new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to update comment.");
+            log.info("Failed to update comment {} at {}.", comment_id, new Date());
+        }
+
+        return response;
+    }
 }
