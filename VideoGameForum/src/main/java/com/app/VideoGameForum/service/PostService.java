@@ -70,8 +70,8 @@ public class PostService {
         return response;
     }
 
-    public HashMap<String, Object> getPostList() {
-        String sql = "SELECT * FROM posts;";
+    public HashMap<String, Object> getLivePosts() {
+        String sql = "SELECT * FROM posts WHERE enabled = true;";
         HashMap<String, Object> response = new HashMap<>();
 
         try {
@@ -86,5 +86,69 @@ public class PostService {
         }
 
         return response;
+    }
+
+    public HashMap<String, Object> disablePost(UUID post_id) {
+        String sql = "UPDATE posts SET enabled = false WHERE post_id = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        if (checkPostEnabled(post_id)) {
+            try {
+                jdbcTemplate.update(sql, post_id);
+                response.put("success", true);
+                response.put("message", "Successfully disabled post.");
+                log.info("Successfully disabled post {} at {}.", post_id, new Date());
+            } catch (DataAccessException exception) {
+                exception.printStackTrace();
+                response.put("success", false);
+                response.put("message", "Failed to disable post.");
+            }
+        } else {
+            response.put("success", false);
+            response.put("message", "Post is already disabled.");
+            log.info("Post is already disabled at {}.", new Date());
+        }
+
+        return response;
+    }
+
+    public HashMap<String, Object> enablePost(UUID post_id) {
+        String sql = "UPDATE posts SET enabled = true WHERE post_id = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        if (checkPostEnabled(post_id)) {
+            response.put("success", false);
+            response.put("message", "Post is already enabled.");
+            log.info("Post is already enabled at {}.", new Date());
+        } else {
+            try {
+                jdbcTemplate.update(sql, post_id);
+                response.put("success", true);
+                response.put("message", "Successfully enabled post.");
+                log.info("Successfully enabled post {} at {}.", post_id, new Date());
+            } catch (DataAccessException exception) {
+                exception.printStackTrace();
+                response.put("success", false);
+                response.put("message", "Failed to enabled post.");
+                log.info("Failed to enable post {} at {}.", post_id, new Date());
+            }
+        }
+
+        return response;
+    }
+
+    private boolean checkPostEnabled(UUID post_id) {
+        String sql = "SELECT enabled FROM posts WHERE post_id = ?";
+        boolean enabled;
+
+        try {
+            Post target = jdbcTemplate.queryForObject(sql, new Object[]{post_id}, new PostMapper());
+            enabled = target.isEnabled();
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            enabled = false;
+        }
+
+        return enabled;
     }
 }
