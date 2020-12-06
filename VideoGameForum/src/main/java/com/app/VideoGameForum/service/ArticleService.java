@@ -185,5 +185,7 @@ public class ArticleService {
             response.put("message", "Failed to update article.");
             log.info("Failed to update article {} at {}.", article_id, new Date());
         }
+
+        return response;
     }
 }
