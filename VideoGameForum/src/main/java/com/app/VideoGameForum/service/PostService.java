@@ -69,4 +69,22 @@ public class PostService {
 
         return response;
     }
+
+    public HashMap<String, Object> getPostList() {
+        String sql = "SELECT * FROM posts;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            List<Post> listPost = jdbcTemplate.query(sql, new PostMapper());
+            response.put("posts", listPost);
+            log.info("Retrieved list of post at {}.", new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to retrieve list of posts");
+            log.info("Failed to get list of posts at {}.", new Date());
+        }
+
+        return response;
+    }
 }
