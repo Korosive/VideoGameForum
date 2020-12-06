@@ -120,4 +120,125 @@ public class UserService {
 
         return response;
     }
+
+    public HashMap<String, Object> updateUserEmail(HashMap<String, Object> new_details) {
+        String sql_check = "SELECT * FROM users WHERE email = ?;";
+        String sql_update= "UPDATE users (email) VALUES (?) WHERE user_id = ?";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID user_id = (UUID) new_details.get("user_id");
+        String email = (String) new_details.get("email");
+
+        try {
+            List<User> list = jdbcTemplate.query(sql_check, new Object[]{email}, new UserMapper());
+            if (list.size() == 1) {
+                User current_user = list.get(0);
+                UUID current_id = current_user.getUser_id();
+
+                if (current_id == user_id) {
+                    jdbcTemplate.update(sql_update, email, user_id);
+                    response.put("success", true);
+                    response.put("message", "Successfully updated email.");
+                    log.info("Successfully updated email of user {} at {}.", user_id, new Date());
+                } else {
+                    response.put("success", false);
+                    response.put("message", "Mismatch error.");
+                    log.info("Error in matching db id and user id at {}.", new Date());
+                }
+            } else {
+                response.put("success", false);
+                response.put("message", "Error in updating email.");
+                log.info("Error in updating email at {}.", new Date());
+            }
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Encountered error in database.");
+            log.info("Encountered error in database to update email at {}.", new Date());
+        }
+
+        return response;
+    }
+
+    public HashMap<String, Object> updateUsername(HashMap<String, Object> new_username) {
+        String sql_check = "SELECT * FROM users WHERE username = ?;";
+        String sql_update= "UPDATE users (username) VALUES (?) WHERE user_id = ?";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID user_id = (UUID) new_username.get("user_id");
+        String username = (String) new_username.get("username");
+
+        try {
+            List<User> list = jdbcTemplate.query(sql_check, new Object[]{username}, new UserMapper());
+            if (list.size() == 1) {
+                User current_user = list.get(0);
+                UUID current_id = current_user.getUser_id();
+
+                if (current_id == user_id) {
+                    jdbcTemplate.update(sql_update, username, user_id);
+                    response.put("success", true);
+                    response.put("message", "Successfully updated username.");
+                    log.info("Successfully updated username of user {} at {}.", user_id, new Date());
+                } else {
+                    response.put("success", false);
+                    response.put("message", "Mismatch error.");
+                    log.info("Error in matching db id and user id at {}.", new Date());
+                }
+            } else {
+                response.put("success", false);
+                response.put("message", "Error in updating username.");
+                log.info("Error in updating email at {}.", new Date());
+            }
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Encountered error in database.");
+            log.info("Encountered error in database to update email at {}.", new Date());
+        }
+
+        return response;
+    }
+
+    public HashMap<String, Object> updatePassword(HashMap<String, Object> new_password) {
+        String sql_check = "SELECT * FROM users WHERE user_id = ?;";
+        String sql_update= "UPDATE users (password) VALUES (?) WHERE user_id = ?";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID user_id = (UUID) new_password.get("user_id");
+        String plain_password = (String) new_password.get("password");
+
+        try {
+            List<User> list = jdbcTemplate.query(sql_check, new Object[]{user_id}, new UserMapper());
+            if (list.size() == 1) {
+                User current_user = list.get(0);
+                UUID current_id = current_user.getUser_id();
+
+                if (current_id == user_id) {
+                    if (!org.mindrot.jbcrypt.BCrypt.checkpw(plain_password, current_user.getPassword())) {
+                        String encrypted_password = org.mindrot.jbcrypt.BCrypt.hashpw(plain_password, org.mindrot.jbcrypt.BCrypt.gensalt());
+                        jdbcTemplate.update(sql_update, encrypted_password , user_id);
+                        response.put("success", true);
+                        response.put("message", "Successfully updated username.");
+                        log.info("Successfully updated username of user {} at {}.", user_id, new Date());
+                    } else {
+                        response.put("success", false);
+                        response.put("message", "Password is the same.");
+                        log.info("Failed to update because password is the same at {}.", new Date());
+                    }
+                } else {
+                    response.put("success", false);
+                    response.put("message", "Mismatch error.");
+                    log.info("Error in matching db id and user id at {}.", new Date());
+                }
+            } else {
+                response.put("success", false);
+                response.put("message", "Error in updating username.");
+                log.info("Error in updating email at {}.", new Date());
+            }
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Encountered error in database.");
+            log.info("Encountered error in database to update email at {}.", new Date());
+        }
+
+        return response;
+    }
 }
