@@ -1,7 +1,9 @@
 package com.app.VideoGameForum.service;
 
 import com.app.VideoGameForum.model.Article;
+import com.app.VideoGameForum.model.ArticleParagraph;
 import com.app.VideoGameForum.util.ArticleMapper;
+import com.app.VideoGameForum.util.ArticleParagraphMapper;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.dao.DataAccessException;
 import org.springframework.jdbc.core.JdbcTemplate;
 import org.springframework.stereotype.Service;
 
+import javax.xml.crypto.Data;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.List;
@@ -79,7 +82,7 @@ public class ArticleService {
             response.put("message", "Article is already disabled.");
             log.info("Article already disabled ({}).", new Date());
         }
-        
+
         return response;
     }
 
@@ -121,6 +124,26 @@ public class ArticleService {
         }
 
         return enabled;
+    }
+
+    public HashMap<String, Object> getArticleById(UUID article_id) {
+        String sql_article = "SELECT * FROM articles WHERE article_id = ?;";
+        String sql_paragraphs = "SELECT * FROM article_paragraphs WHERE article_id = ?;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            Article article = jdbcTemplate.queryForObject(sql_article, new Object[]{article_id}, new ArticleMapper());
+            List<ArticleParagraph> paragraphs = jdbcTemplate.query(sql_paragraphs, new ArticleParagraphMapper());
+            response.put("article", article);
+            response.put("paragraphs", paragraphs);
+            log.info("Retrieved article {} at {}.", article_id, new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("message", "Failed to retrieve article.");
+            log.info("Failed to retrieve article {} at {}.", article_id, new Date());
+        }
+
+        return response;
     }
 
 }
