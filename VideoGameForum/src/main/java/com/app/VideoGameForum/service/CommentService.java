@@ -1,0 +1,46 @@
+package com.app.VideoGameForum.service;
+
+import com.app.VideoGameForum.model.Comment;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
+import org.springframework.jdbc.core.JdbcTemplate;
+import org.springframework.stereotype.Service;
+
+import java.util.Date;
+import java.util.HashMap;
+import java.util.UUID;
+
+@Service
+public class CommentService {
+
+    @Autowired
+    private JdbcTemplate jdbcTemplate;
+
+    private final Logger log = LoggerFactory.getLogger(this.getClass());
+
+    public HashMap<String, Object> createComment(Comment new_comment) {
+        String sql = "INSERT INTO comments (comment_id, post_id, username, comment, date_created, last_updated, enabled) VALUES (?, ?, ?, ?, ?, ?, ?)";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID comment_id = UUID.randomUUID();
+        UUID post_id = new_comment.getPost_id();
+        String username = new_comment.getUsername();
+        String comment = new_comment.getUsername();
+        Date date_created = new Date(), last_updated = new Date();
+
+        try {
+            jdbcTemplate.update(sql, comment_id, post_id, username, comment, date_created, last_updated, true);
+            response.put("success", true);
+            response.put("message", "Successfully created comment.");
+            log.info("Created comment ({}) for post ({}) at {}.", comment_id, post_id, new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to create comment.");
+            log.info("Failed to create comment for post at {}.", new Date());
+        }
+
+        return response;
+    }
+}

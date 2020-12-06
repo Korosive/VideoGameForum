@@ -50,7 +50,7 @@ public class PostService {
     }
     public HashMap<String, Object> getPostThread(UUID post_id) {
         String sql_post = "SELECT * FROM posts WHERE post_id = ?;";
-        String sql_comments = "SELECT * FROM comments WHERE post_id = ?;";
+        String sql_comments = "SELECT * FROM comments WHERE post_id = ? AND enabled = true;";
         HashMap<String, Object> response = new HashMap<>();
 
         try {

@@ -15,7 +15,9 @@ public class CommentMapper implements RowMapper<Comment> {
                 resultSet.getObject("post_id", UUID.class),
                 resultSet.getString("username"),
                 resultSet.getString("comment"),
-                resultSet.getDate("date_created")
+                resultSet.getDate("date_created"),
+                resultSet.getDate("last_updated"),
+                resultSet.getBoolean("enabled")
         );
     }
 }

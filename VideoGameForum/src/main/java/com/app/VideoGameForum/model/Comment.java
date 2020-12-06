@@ -23,12 +23,20 @@ public class Comment {
     @Column(name = "date_created")
     private Date date_created;
 
-    public Comment(UUID comment_id, UUID post_id, String username, String comment, Date date_created) {
+    @Column(name = "last_updated")
+    private Date last_updated;
+
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public Comment(UUID comment_id, UUID post_id, String username, String comment, Date date_created, Date last_updated, boolean enabled) {
         this.comment_id = comment_id;
         this.post_id = post_id;
         this.username = username;
         this.comment = comment;
         this.date_created = date_created;
+        this.last_updated = last_updated;
+        this.enabled = enabled;
     }
 
     public UUID getComment_id() {
@@ -49,5 +57,13 @@ public class Comment {
 
     public Date getDate_created() {
         return date_created;
+    }
+
+    public Date getLast_updated() {
+        return last_updated;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }
