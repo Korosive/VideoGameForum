@@ -16,6 +16,7 @@ public class UserMapper implements RowMapper<User> {
                 resultSet.getString("username"),
                 resultSet.getString("password"),
                 resultSet.getDate("date_created"),
+                resultSet.getDate("last_updated"),
                 resultSet.getBoolean("enabled")
         );
     }
