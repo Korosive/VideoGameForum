@@ -26,13 +26,17 @@ public class Post {
     @Column(name = "last_updated")
     private Date last_updated;
 
-    public Post(UUID post_id, String username, String title, String description, Date date_created, Date last_updated) {
+    @Column(name = "enabled")
+    private boolean enabled;
+
+    public Post(UUID post_id, String username, String title, String description, Date date_created, Date last_updated, boolean enabled) {
         this.post_id = post_id;
         this.username = username;
         this.title = title;
         this.description = description;
         this.date_created = date_created;
         this.last_updated = last_updated;
+        this.enabled = enabled;
     }
 
     public UUID getPost_id() {
@@ -57,5 +61,9 @@ public class Post {
 
     public Date getLast_updated() {
         return last_updated;
+    }
+
+    public boolean isEnabled() {
+        return enabled;
     }
 }

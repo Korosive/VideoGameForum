@@ -13,7 +13,7 @@ public class CommentMapper implements RowMapper<Comment> {
         return new Comment(
                 resultSet.getObject("comment_id", UUID.class),
                 resultSet.getObject("post_id", UUID.class),
-                resultSet.getObject("user_id", UUID.class),
+                resultSet.getString("username"),
                 resultSet.getString("comment"),
                 resultSet.getDate("date_created")
         );

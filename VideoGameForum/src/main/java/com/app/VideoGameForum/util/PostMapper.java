@@ -16,7 +16,8 @@ public class PostMapper implements RowMapper<Post> {
                 resultSet.getString("title"),
                 resultSet.getString("description"),
                 resultSet.getDate("date_created"),
-                resultSet.getDate("last_updated")
+                resultSet.getDate("last_updated"),
+                resultSet.getBoolean("enabled")
         );
     }
 }

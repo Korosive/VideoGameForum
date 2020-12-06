@@ -14,8 +14,8 @@ public class Comment {
     @Column(name = "post_id")
     private UUID post_id;
 
-    @Column(name = "user_id")
-    private UUID user_id;
+    @Column(name = "username")
+    private String username;
 
     @Column(name = "comment")
     private String comment;
@@ -23,10 +23,10 @@ public class Comment {
     @Column(name = "date_created")
     private Date date_created;
 
-    public Comment(UUID comment_id, UUID post_id, UUID user_id, String comment, Date date_created) {
+    public Comment(UUID comment_id, UUID post_id, String username, String comment, Date date_created) {
         this.comment_id = comment_id;
         this.post_id = post_id;
-        this.user_id = user_id;
+        this.username = username;
         this.comment = comment;
         this.date_created = date_created;
     }
@@ -39,8 +39,8 @@ public class Comment {
         return post_id;
     }
 
-    public UUID getUser_id() {
-        return user_id;
+    public String getUsername() {
+        return username;
     }
 
     public String getComment() {
