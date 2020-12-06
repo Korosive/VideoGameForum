@@ -172,4 +172,27 @@ public class PostService {
 
         return enabled;
     }
+
+    public HashMap<String, Object> updatePost(Post update_post) {
+        String sql = "UPDATE articles SET title = ?, description = ?, last_updated = ? WHERE post_id = ?";
+        HashMap<String, Object> response = new HashMap<>();
+        UUID post_id = update_post.getPost_id();
+        String title = update_post.getTitle();
+        String description = update_post.getDescription();
+        Date last_updated = new Date();
+
+        try {
+            jdbcTemplate.update(sql, title, description, last_updated, post_id);
+            response.put("success", true);
+            response.put("message", "Successfully updated post.");
+            log.info("Successfully updated post {} at {}.", post_id, last_updated);
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to update post.");
+            log.info("Failed to update post {} at {}.", post_id, last_updated);
+        }
+
+        return response;
+    }
 }
