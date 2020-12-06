@@ -88,6 +88,24 @@ public class PostService {
         return response;
     }
 
+    public HashMap<String, Object> getAllPosts() {
+        String sql = "SELECT * FROM posts;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            List<Post> listPosts = jdbcTemplate.query(sql, new PostMapper());
+            response.put("posts", listPosts);
+            log.info("Successfully retrieved all posts at {}.", new Date());
+        } catch (DataAccessException exception) {
+            exception.printStackTrace();
+            response.put("success", false);
+            response.put("message", "Failed to retrieve all posts.");
+            log.info("Failed to retrieve all posts at {}.", new Date());
+        }
+
+        return response;
+    }
+
     public HashMap<String, Object> disablePost(UUID post_id) {
         String sql = "UPDATE posts SET enabled = false WHERE post_id = ?;";
         HashMap<String, Object> response = new HashMap<>();
