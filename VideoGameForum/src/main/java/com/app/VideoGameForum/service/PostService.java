@@ -58,6 +58,7 @@ public class PostService {
             log.info("Retrieved post: {} at {}.", post_id, new Date());
             List<Comment> listComments = jdbcTemplate.query(sql_comments, new Object[]{post_id}, new CommentMapper());
             log.info("Retrieved comments for {} at {}.", post_id, new Date());
+            response.put("success", true);
             response.put("post", post);
             response.put("comments", listComments);
         } catch (DataAccessException exception) {
@@ -76,6 +77,7 @@ public class PostService {
 
         try {
             List<Post> listPost = jdbcTemplate.query(sql, new PostMapper());
+            response.put("success", true);
             response.put("posts", listPost);
             log.info("Retrieved list of post at {}.", new Date());
         } catch (DataAccessException exception) {
@@ -94,6 +96,7 @@ public class PostService {
 
         try {
             List<Post> listPosts = jdbcTemplate.query(sql, new PostMapper());
+            response.put("success", true);
             response.put("posts", listPosts);
             log.info("Successfully retrieved all posts at {}.", new Date());
         } catch (DataAccessException exception) {

@@ -29,12 +29,13 @@ public class ArticleService {
 
         try {
             List<Article> listArticles = jdbcTemplate.query(sql, new ArticleMapper());
+            response.put("success", true);
             response.put("articles", listArticles);
             log.info("Retrieved a list of articles on ({}).", new Date());
         } catch (DataAccessException exception) {
             exception.printStackTrace();
             log.info("Failed to retrieve list of articles on ({}).", new Date());
-            response.put("status", "Error");
+            response.put("success", false);
             response.put("message", "Failed to retrieve list of articles.");
         }
 
@@ -47,12 +48,13 @@ public class ArticleService {
 
         try {
             List<Article> listArticles = jdbcTemplate.query(sql, new ArticleMapper());
+            response.put("success", true);
             response.put("articles", listArticles);
             log.info("Retrieved a list of articles on ({}).", new Date());
         } catch (DataAccessException exception) {
             exception.printStackTrace();
             log.info("Failed to retrieve list of articles on ({}).", new Date());
-            response.put("status", "Error");
+            response.put("success", false);
             response.put("message", "Failed to retrieve list of articles.");
         }
 
@@ -130,10 +132,12 @@ public class ArticleService {
 
         try {
             Article article = jdbcTemplate.queryForObject(sql, new Object[]{article_id}, new ArticleMapper());
+            response.put("success", true);
             response.put("article", article);
             log.info("Retrieved article {} at {}.", article_id, new Date());
         } catch (DataAccessException exception) {
             exception.printStackTrace();
+            response.put("success", false);
             response.put("message", "Failed to retrieve article.");
             log.info("Failed to retrieve article {} at {}.", article_id, new Date());
         }
