@@ -25,6 +25,11 @@ public class ArticleController {
         return articleService.getAllArticles();
     }
 
+    @GetMapping(value = "/get/latest", produces = "application/json")
+    public HashMap<String, Object> getLatestArticles() {
+        return articleService.getLatestArticles();
+    }
+
     @GetMapping(value = "/get/article/{article_id}", produces = "application/json")
     public HashMap<String, Object> getArticleById(@PathVariable UUID article_id) {
         return articleService.getArticleById(article_id);

@@ -43,7 +43,7 @@ public class ArticleService {
     }
 
     public HashMap<String, Object> getAllArticles() {
-        String sql = "SELECT article_id, username, title, date_created FROMm articles ORDER BY date_Created DESC;";
+        String sql = "SELECT article_id, username, title, date_created FROM articles ORDER BY date_Created DESC;";
         HashMap<String, Object> response = new HashMap<>();
 
         try {
@@ -56,6 +56,24 @@ public class ArticleService {
             log.info("Failed to retrieve list of articles on ({}).", new Date());
             response.put("success", false);
             response.put("message", "Failed to retrieve list of articles.");
+        }
+
+        return response;
+    }
+
+    public HashMap<String, Object> getLatestArticles() {
+        String sql = "SELECT * FROM articles WHERE enabled = true ORDER BY date_created DESC LIMIT 5;";
+        HashMap<String, Object> response = new HashMap<>();
+
+        try {
+            List<Article> list = jdbcTemplate.query(sql, new ArticleMapper());
+            response.put("success", true);
+            response.put("articles", list);
+            log.info("Retrieved latest articles at {}.", new Date());
+        } catch (DataAccessException exception) {
+            response.put("success", false);
+            response.put("message", "Failed to retrieve latest articles.");
+            log.info("Failed to retrieve latest articles at {}.", new Date());
         }
 
         return response;
